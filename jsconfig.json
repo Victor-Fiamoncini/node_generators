@@ -1,0 +1,14 @@
+{
+	"typeAcquisition": {
+		"include": [
+			"jest"
+		]
+	},
+	"compilerOptions": {
+		"baseUrl": "./",
+		"paths": {
+			"@/src/*": ["./src/*"]
+		}
+	},
+	"exclude": ["node_modules", "build"]
+}

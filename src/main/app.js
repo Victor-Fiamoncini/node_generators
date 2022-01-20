@@ -45,7 +45,9 @@ async function main() {
 		console.log(`Second server running at: ${SECOND_SERVER_PORT}`)
 	})
 
-	console.table(await improveProductInfos())
+	for await (const data of improveProductInfos()) {
+		console.table(data)
+	}
 }
 
 main()

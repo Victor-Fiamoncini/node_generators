@@ -2,6 +2,8 @@ import { createServer } from 'http'
 import { parse } from 'url'
 import { v4 as uuid } from 'uuid'
 
+import { improveProductInfos } from '@/src/main/requests'
+
 const FIRST_SERVER_PORT = 3000
 const SECOND_SERVER_PORT = 3001
 
@@ -24,8 +26,8 @@ async function firstServerHandler(req, res) {
 
 async function secondServerHandler(req, res) {
 	if (req.method === 'POST' && req.url.includes('cart')) {
-		for await (const data of req) {
-			const product = JSON.parse(data)
+		for await (const productBuffer of req) {
+			const product = JSON.parse(productBuffer)
 
 			return res.end(`Process succeeded for ${product?.id}`)
 		}
@@ -34,10 +36,16 @@ async function secondServerHandler(req, res) {
 	return res.end('Unable to process request')
 }
 
-createServer(firstServerHandler).listen(FIRST_SERVER_PORT, () => {
-	console.log(`First server running at: ${FIRST_SERVER_PORT}`)
-})
+async function main() {
+	createServer(firstServerHandler).listen(FIRST_SERVER_PORT, () => {
+		console.log(`First server running at: ${FIRST_SERVER_PORT}`)
+	})
 
-createServer(secondServerHandler).listen(SECOND_SERVER_PORT, () => {
-	console.log(`Second server running at: ${SECOND_SERVER_PORT}`)
-})
+	createServer(secondServerHandler).listen(SECOND_SERVER_PORT, () => {
+		console.log(`Second server running at: ${SECOND_SERVER_PORT}`)
+	})
+
+	console.table(await improveProductInfos())
+}
+
+main()
